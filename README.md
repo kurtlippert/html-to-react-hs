@@ -1,6 +1,20 @@
-# react-ts-starter  
+# html-to-react-hs  
 `yarn(npm) start` to run  
-  
+
+Take HTML and convert it into a React-DOM Hyperscript style  
+
+```html
+<div>
+  <span id="idHere" class="classHere"></span>
+</div>
+```  
+To  
+```javascript
+div({},
+  span({ id: 'idHere', className: 'classHere' }),
+),
+```  
+
 **Features**  
 * `webpack.config` written in ts
 * tree-shaking support (all without having to use babel)
