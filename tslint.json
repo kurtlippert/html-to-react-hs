@@ -1,6 +1,9 @@
 {
   "extends": "tslint:latest",
   "rules": {
+    "object-literal-key-quotes": [
+      true, "as-needed"
+    ],
     "no-implicit-dependencies": false,
     "quotemark": [
       true, "single", "avoid-escape", "avoid-template"
