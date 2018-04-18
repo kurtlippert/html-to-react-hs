@@ -1,156 +1,61 @@
-
-// tslint:disable:no-submodule-imports
-
-// react
-import * as React from 'react'
-const r = React.createElement
+import { calc } from 'csx'
+import { createElement as r } from 'react'
 import { render } from 'react-dom'
-import { br, div, hr, img, li, tbody, td, th, thead, tr, ul } from 'react-dom-factories'
-import { BrowserRouter as Router, NavLink } from 'react-router-dom'
-
-// redux
+import { div, label, textarea } from 'react-dom-factories'
 import { connect, Provider } from 'react-redux'
-import { applyMiddleware, createStore, Store} from 'redux'
-import { createEpicMiddleware, Epic } from 'redux-observable'
+import { createStore, Dispatch, Store } from 'redux'
+import { media, style } from 'typestyle'
+import { htmlToHs } from '../lib/htmlToHs'
 
-// rxjs
-import { Observable } from 'rxjs'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/mergeMap'
-import { ajax } from 'rxjs/observable/dom/ajax'
-
-// typestyle
-import { style } from 'typestyle'
-
-// react-bootstrap
-import { Table } from 'react-bootstrap'
-import { withRouter } from 'react-router'
-
-// model
-interface User {
-  id: number,
-  first_name: string,
-  last_name: string,
-  avatar: string,
-}
-
-interface State {
-  users: User[]
-}
-
-// action
-type Action =
-  | { type: 'FETCH_USERS' }
-  | { payload: User[], type: 'FETCH_USERS_FULFILLED' }
-
-const fetchUsers = (): Action => ({
-  type: 'FETCH_USERS',
-})
-
-const fetchUsersFulfilled = (payload: User[]): Action => ({
-  payload,
-  type: 'FETCH_USERS_FULFILLED',
-})
-
-// update
-// epics
-// https://reqres.in/api/users
-interface UserResponse {
-  data: User[]
-}
-
-interface EpicDependencies {
-  getJSON: (url: string) => Observable<UserResponse>
-}
-
-export const fetchUsersEpic:
-  Epic<Action, Store<State>, EpicDependencies> =
-  (action$, _, { getJSON }) => {
-    return action$.ofType('FETCH_USERS')
-      .mergeMap(() =>
-        getJSON('https://reqres.in/api/users?page=1')
-          .map(({ data }) =>
-            fetchUsersFulfilled(data),
+const htmlInputArea = (dispatch: Dispatch<State>) =>
+  div({ className: 'form-group' },
+    label({ htmlFor: 'htmlString' }),
+    textarea({
+      className:
+        `form-control
+        ${style(
+          media({ minWidth: 0, maxWidth: '767px' },
+            {
+              height: calc('50vh - 50px'),
+            },
           ),
-      )
-  }
-
-// reducers
-const users = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'FETCH_USERS_FULFILLED':
-      return {
-        ...state,
-        users: action.payload,
-      }
-    default:
-      return state
-  }
-}
-
-// views
-const home = () => {
-  return div({},
-    div({}, 'home page'),
-  )
-}
-
-// tslint:disable-next-line:variable-name
-const _about: React.SFC<{ state: State }> = ({ state }) =>
-  div({},
-    div({}, 'about page'),
-    r(Table, { responsive: true },
-      thead({},
-        tr({},
-          th({}, '#'),
-          th({}, 'First Name'),
-          th({}, 'Last Name'),
-          th({}, 'Avatar'),
-        ),
-      ),
-      tbody({},
-        (state.users as any).map((user: User, index: number) =>
-          tr({ key: user.id },
-            td({}, index),
-            td({}, user.first_name),
-            td({}, user.last_name),
-            td({},
-              img({ src: user.avatar }),
-            ),
-          ),
-        ),
-      ),
-    ),
+          {
+            height: calc('100vh - 50px'),
+          },
+        )}`,
+      id: 'htmlString',
+      onChange: (e: any) => dispatch({ type: '', value: htmlToHs(e.target.value) }),
+      placeholder: 'Text In',
+    }),
   )
 
-const about = connect(
+// tslint:disable-next-line:no-shadowed-variable
+const htmlOutputArea: React.SFC<{ state: State }> = ({ state }) =>
+  div({ className: 'form-group' },
+    label({ htmlFor: 'htmlString' }),
+    textarea({
+      className:
+        `form-control
+        ${style(
+          media({ minWidth: 0, maxWidth: '767px' },
+            {
+              height: calc('50vh - 50px'),
+            },
+          ),
+          {
+            height: calc('100vh - 50px'),
+          },
+        )}`,
+      id: 'htmlString',
+      placeholder: 'Text Out',
+      readOnly: true,
+      value: state.value,
+    }),
+  )
+
+const HtmlOutputArea = connect(
   (state: State) => ({ state }),
-)(_about)
-
-const topics = () =>
-  div({},
-    div({}, 'topic page'),
-  )
-
-// tslint:disable-next-line:variable-name
-const _ConnectedContainer: React.SFC<{ location: any }> = ({ location }) =>
-    div({},
-      location.pathname,
-      br({}),
-      br({}),
-      location.pathname === '/'
-        ? r(home)
-        : location.pathname === '/about'
-          ? r(about)
-          : location.pathname === '/topics'
-            ? r(topics)
-            : r(home),
-    )
-
-const ConnectedContainer = withRouter(
-  connect(
-    (_: State, ownProps: any) => ({ location: ownProps.location }),
-  )(_ConnectedContainer) as any)
+)(htmlOutputArea)
 
 interface RootProps {
   store: Store<State>
@@ -159,35 +64,28 @@ interface RootProps {
 // tslint:disable-next-line:no-shadowed-variable
 const Root: React.SFC<RootProps> = ({ store }) =>
   r(Provider, { store },
-    r(Router, {},
-      div({ className: style({ marginTop: '10px' }) },
-        ul({},
-          li({}, r(NavLink, { to: '/' }, 'Home')),
-          li({}, r(NavLink, { to: '/about' }, 'About')),
-          li({}, r(NavLink, { to: '/topics' }, 'Topics')),
+    div({ className: 'container-fluid' },
+      div({ className: 'row' },
+        div({ className: 'col-md-6' },
+          htmlInputArea(store.dispatch),
         ),
-        hr({}),
-        r(ConnectedContainer),
+        div({ className: 'col-md-6' },
+          r(HtmlOutputArea),
+        ),
       ),
     ),
   )
 
-const epicMiddleware = createEpicMiddleware(fetchUsersEpic, {
-  dependencies: {
-    getJSON: ajax.getJSON,
-  },
-})
+interface State { value: string }
 
-const initialState: State = {
-  users: [],
-}
+interface Action { type: any, value: string }
 
-const store = createStore(users, initialState, applyMiddleware(epicMiddleware))
+const reducer = (state: State, action: Action): State =>
+  ({ ...state, value: action.value })
 
-// render
+const store = createStore(reducer, { value: '' })
+
 render(
   r(Root, { store }),
   document.getElementById('root'),
 )
-
-store.dispatch(fetchUsers())
