@@ -1,6 +1,6 @@
 {
-  "name": "react-ts-starter",
-  "description": "Starter code for react / redux / typescript / webpack project",
+  "name": "html-to-react-hs",
+  "description": "Convert HTML to React DOM Hyperscript (provided by react-dom-factories)",
   "version": "1.0.0",
   "license": "MIT",
   "author": "Kurt Lippert",
@@ -8,11 +8,13 @@
   "scripts": {
     "start": "dotenv webpack-dev-server --hot --inline --colors --content-base src/",
     "build": "dotenv webpack --display-error-details",
-    "stats": "webpack --profile --json > stats.json"
+    "stats": "webpack --profile --json > stats.json",
+    "test": "tsc -p tsconfig.test.json && node -r source-map-support/register \"node_modules/tape/bin/tape\" dist/**/*.test.js | tap-dot --colors"
   },
   "dependencies": {
     "clean-webpack-plugin": "0.1.19",
     "csstips": "0.2.3",
+    "csx": "^8.5.0",
     "html-webpack-plugin": "3.2.0",
     "lodash": "4.17.5",
     "react": "16.3.1",
@@ -24,14 +26,15 @@
     "redux": "3.7.2",
     "redux-observable": "0.18.0",
     "rxjs": "5.5.8",
+    "tape": "4.9.0",
     "ts-loader": "4.2.0",
     "typestyle": "1.7.2",
     "webpack": "4.5.0",
     "webpack-merge": "4.1.2"
   },
   "devDependencies": {
-    "@types/clean-webpack-plugin": "^0.1.2",
-    "@types/html-webpack-plugin": "^2.30.3",
+    "@types/clean-webpack-plugin": "0.1.2",
+    "@types/html-webpack-plugin": "2.30.3",
     "@types/lodash": "4.14.106",
     "@types/node": "8.10.6",
     "@types/react": "16.3.6",
@@ -40,20 +43,22 @@
     "@types/react-dom-factories": "1.0.1",
     "@types/react-redux": "5.0.15",
     "@types/react-router-dom": "4.2.6",
+    "@types/tape": "^.2.32",
     "@types/webpack": "4.1.3",
-    "@types/webpack-merge": "^4.1.3",
+    "@types/webpack-merge": "4.1.3",
     "css-loader": "0.28.11",
     "dotenv-cli": "1.4.0",
     "file-loader": "1.1.11",
     "json-server": "0.12.1",
     "style-loader": "0.20.3",
+    "tap-dot": "^1.0.5",
     "ts-node": "5.0.1",
     "tsconfig-paths": "3.2.0",
     "tsconfig-paths-webpack-plugin": "3.0.3",
     "tslint": "5.9.1",
     "typescript": "2.8.1",
     "url-loader": "1.0.1",
-    "webpack-cli": "^2.0.14",
+    "webpack-cli": "2.0.14",
     "webpack-dev-server": "3.1.3",
     "webpack-validator": "3.0.0"
   }
