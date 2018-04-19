@@ -45,7 +45,7 @@ const commonConfig: Config = {
   output: {
     filename: outputFilename,
     path: outputPath,
-    publicPath: TARGET_ENV === 'development' ? 'http://localhost:8080/' : '/',
+    publicPath: TARGET_ENV === 'development' ? 'http://localhost:8080/' : '/html-to-react-hs/',
   },
   plugins: [
     new HtmlWebpackPlugin({
