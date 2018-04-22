@@ -18,7 +18,8 @@ div({},
 ```  
 
 ## Motivation ##
-See here: https://github.com/jsforum/jsforum/issues/1  
+See here: https://github.com/jsforum/jsforum/issues/1  
+And here: https://twitter.com/andrestaltz/status/987748964693889025?s=19
 
 - Everything is just JS (or TS), so no suprises  
   - Weird ways to comment code out
